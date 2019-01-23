@@ -2,11 +2,16 @@
   "name": "geolocation_tutorial",
   "private": true,
   "dependencies": {
+    "@babel/polyfill": "^7.2.5",
+    "@material-ui/core": "^3.9.0",
     "@rails/webpacker": "3.5",
+    "axios": "^0.18.0",
     "babel-preset-react": "^6.24.1",
+    "mapbox-gl": "^0.52.0",
     "prop-types": "^15.6.2",
     "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "react-dom": "^16.7.0",
+    "react-on-rails": "11.2.2"
   },
   "devDependencies": {
     "webpack-dev-server": "2.11.2"
