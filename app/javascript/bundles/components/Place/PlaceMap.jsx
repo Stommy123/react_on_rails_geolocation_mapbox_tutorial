@@ -30,7 +30,7 @@ class PlaceMap extends Component {
       })
     )
     map.addControl(new mapboxgl.NavigationControl(), 'top-right')
-    map.on('load',  event => {
+    map.on('load',  _ => {
       map.addSource( 'places', { type: 'geojson', data: '/places.json' })
       map.addLayer(placeLayer)
       map.on('click', 'places', e => {

@@ -17,6 +17,7 @@ class PlacesController < ApplicationController
                 id: place.id,
                 name: place.name,
                 address: place.address,
+                bar: place.bar,
                 user: place.user
               }
             }

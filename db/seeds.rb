@@ -6,42 +6,23 @@
 #   movies = Movie.find_or_create_by([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.find_or_create_by(name: 'Luke', movie: movies.first)
 
-Place.find_or_create_by(
-  name: 'Zuma',
-  street: '270 Biscayne Blvd Way',
-  city: 'Miami',
-  state: 'FL',
-  user_id: 1
-)
-sleep 1
-Place.find_or_create_by(
-  name: 'Prime 112',
-  street: '112 Ocean Dr',
-  city: 'Miami Beach',
-  state: 'FL',
-  user_id: 1
-)
-sleep 1
-Place.find_or_create_by(
-  name: "Joe's Stone Crab",
-  street: '11 Washington Ave',
-  city: 'Miami Beach',
-  state: 'FL',
-  user_id: 1
-)
-sleep 1
-Place.find_or_create_by(
-  name: 'Hillstone',
-  street: '201 Miracle Mile',
-  city: 'Coral Gables',
-  state: 'FL',
-  user_id: 1
-)
-sleep 1 
-Place.find_or_create_by(
-  name: 'Wyncode',
-  street: '549 NW 28th Street',
-  city: 'Miami',
-  state: 'FL',
-  user_id: 1
-)
+User.create(email: 'tommy@tommy.com', password: 'password', password_confirmation: 'password')
+places = [
+  ['Zuma', '270 Biscayne Blvd Way', 'Miami', 'FL', false],
+  ['Prime 112', '112 Ocean Dr', 'Miami Beach', 'FL', false],
+  ["Joe's Stone Crab", '11 Washington Ave', 'Miami Beach', 'FL', false],
+  ['Edge Steak and Bar', '270 Biscayne Blvd Way', 'Miami', 'FL', false],
+  ['Hillstone', '201 Miracle Mile', 'Coral Gables', 'FL', false],
+  ['BLackbird Ordinary', '729 SW 1st Ave', 'Miami', 'FL', true],
+  ['Employees Only', '1030 Washington Ave', 'Miami Beach', 'FL', true],
+  ['The Broken Shaker', 'Indian Creek Dr', 'Miami Beach', 'FL', true],
+  ['Per Se', '10 Columbus Cir', 'New York', 'NY', false],
+  ['Le Bernadin', '155 W 51st ST', 'New York', 'NY', false],
+  ['The Dead Rabbit', '30 Water St', 'New York', 'NY', true]
+
+]
+places.each do |name, street, city, state, bar|
+  Place.find_or_create_by(name: name, street: street, city: city, state: state, bar: bar, user_id: User.last.id)
+  sleep 1
+end 
+

@@ -7,26 +7,9 @@ class PlaceForm extends Component {
     city: String(),
     state: String()
   }
-  handleNameChange = e => {
-    let { name } = this.state
-    name = event.target.value
-    this.setState({ name })
-  }
-  handleStreetChange = e => {
-    let { street } = this.state
-    street = event.target.value
-    this.setState({ street })
-  }
-  handleCityChange = e => {
-    let { city } = this.state
-    city = event.target.value
-    this.setState({ city })
-  }
-  handleStateChange = e => {
-    let { state } = this.state
-    state = event.target.value
-    this.setState({ state })
-  }
+
+  handleChange = field => e => this.setState({ [field]: e.target.value })
+
   handleSubmit = e => {
     e.preventDefault()
     const { name, street, city, state } = this.state
@@ -39,6 +22,7 @@ class PlaceForm extends Component {
       state: String()
     })
   }
+
   render() {
     const { name, street, city, state } = this.state;
     return (
@@ -48,28 +32,28 @@ class PlaceForm extends Component {
           type='text'
           value={name}
           placeholder='Please input a name'
-          onChange={this.handleNameChange}
+          onChange={this.handleChange('name')}
           label='Name'
         />
         <input
           type='text'
           value={street}
           placeholder='Please input a street'
-          onChange={this.handleStreetChange}
+          onChange={this.handleChange('street')}
           label='Street'
         />
         <input
           type='text'
           value={city}
           placeholder='Please input a city'
-          onChange={this.handleCityChange}
+          onChange={this.handleChange('city')}
           label='City'
         />
         <input
           type='text'
           value={state}
           placeholder='Please input a state'
-          onChange={this.handleStateChange}
+          onChange={this.handleChange('state')}
           label='State'
         />
         <input

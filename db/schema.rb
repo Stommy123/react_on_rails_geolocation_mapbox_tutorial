@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2019_01_23_012339) do
     t.string "city"
     t.string "state"
     t.string "country"
+    t.boolean "bar"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
