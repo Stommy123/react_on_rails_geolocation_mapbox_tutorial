@@ -25,13 +25,14 @@ class PlaceMap extends Component {
   createMap = (mapOptions, geolocationOptions) => {
     this.map = new mapboxgl.Map(mapOptions)
     const map = this.map
+    map.addControl(new MapboxGeocoder({ accessToken: mapboxToken }))
+    map.addControl(new mapboxgl.NavigationControl(), 'top-right')
     map.addControl(
       new mapboxgl.GeolocateControl({
         positionOptions: geolocationOptions,
         trackUserLocation: true
       })
     )
-    map.addControl(new mapboxgl.NavigationControl(), 'top-right')
     map.on('load',  _ => {
       const { lat, lng } = map.getCenter();
       map.addSource( 'places', { type: 'geojson', data: `/places.json?lat=${lat}&lng=${lng}` })

@@ -14,8 +14,8 @@
  *= require_self
  */
 #map-container { display: flex; flex-direction: row; height: 500px; }
-#map { width: 40%; height: 500px; background-color: 'azure'; }
+#map { width: 50%; height: 500px; background-color: 'azure'; }
 #list-container { border: 1px solid black; margin-left: 15px; width: 25%; text-align: center; overflow-y: scroll;}
-#tracker-container { border: 1px solid black; width: 25%; text-align: center; }
+#tracker-container { border: 1px solid black; width: 20%; text-align: center; }
 #popup { text-align: center; font-size: 12px; }
 #place-form { margin-top: 15px; }
