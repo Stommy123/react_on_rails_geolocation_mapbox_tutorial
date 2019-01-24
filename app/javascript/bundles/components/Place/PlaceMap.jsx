@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
 import PlaceList from './PlaceList.jsx';
 import Tracker from '../Location/Tracker.jsx';
-import { mapboxToken, placeLayer, geolocationOptions, loadPosition } from '../../utilities/utils';
+import { mapboxToken, mapStyle, placeLayer, geolocationOptions, loadPosition } from '../../utilities/utils';
 
 
 class PlaceMap extends Component {
@@ -11,11 +11,12 @@ class PlaceMap extends Component {
 
   async componentDidMount() {
     const position = await loadPosition();
-    const geoLoc = [position.coords.longitude, position.coords.latitude]
+    const { latitude, longitude } = position.coords
+    const geoLoc = [longitude, latitude]
     mapboxgl.accessToken = mapboxToken
     const mapOptions = {
       container: this.mapContainer,
-      style: 'mapbox://styles/mapbox/streets-v9',
+      style: mapStyle,
       zoom: 12,
       center: geoLoc
     }
@@ -40,9 +41,7 @@ class PlaceMap extends Component {
       map.on('click', 'places', e => {
         const { properties, geometry } = e.features[0]
         const coordinates = geometry.coordinates.slice()
-        const name = properties.name
-        const id = properties.id
-        const address = properties.address
+        const { name, id, address } = properties
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
         }
@@ -68,7 +67,7 @@ class PlaceMap extends Component {
     map.getSource('places').setData(data)
     let { places } = this.state
     places = features.map(place => {
-      const { properties: { id, name, address} } = place
+      const { properties: { id, name, address } } = place
       const { geometry: { coordinates } } = place
       return { id, name, address, coordinates }
     })
