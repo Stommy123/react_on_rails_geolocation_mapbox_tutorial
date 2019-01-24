@@ -3,7 +3,7 @@ class PlacesController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        @places = Place.all
+        @places = Place.near([params[:lat], params[:lng]], 50)
         render json: {
           type: 'FeatureCollection',
           features: @places.map do |place|

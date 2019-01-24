@@ -33,7 +33,8 @@ class PlaceMap extends Component {
     )
     map.addControl(new mapboxgl.NavigationControl(), 'top-right')
     map.on('load',  _ => {
-      map.addSource( 'places', { type: 'geojson', data: '/places.json' })
+      const { lat, lng } = map.getCenter();
+      map.addSource( 'places', { type: 'geojson', data: `/places.json?lat=${lat}&lng=${lng}` })
       map.addLayer(placeLayer)
       map.on('click', 'places', e => {
         const { properties, geometry } = e.features[0]
@@ -61,7 +62,8 @@ class PlaceMap extends Component {
 
   fetchPlaces = async _ => {
     const map = this.map
-    const { data, data: { features } } = await axios.get('/places.json')
+    const { lat, lng } = map.getCenter();
+    const { data, data: { features } } = await axios.get(`/places.json?lat=${lat}&lng=${lng}`)
     map.getSource('places').setData(data)
     let { places } = this.state
     places = features.map(place => {
