@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios'
+import axios from 'axios';
+import { round } from 'lodash';
 import { headers, geolocationOptions } from '../../utilities/utils';
 
 
@@ -8,7 +9,7 @@ class Tracker extends Component {
 
   componentDidMount() {
     this.trackLocation()
-    this.interval = setInterval(this.trackLocation, 60000)
+    this.interval = setInterval(this.trackLocation, 30000)
     window.addEventListener('beforeunload', this.handleLeavePage)
   }
 
@@ -26,9 +27,8 @@ class Tracker extends Component {
     )
   }
 
-  handleHome = _ => Turbolinks.visit('/');
-
   trackLocation = _ => {
+    const { flyTo } = this.props
     const success = async pos => {
       const { latitude, longitude } = pos.coords
       const { data } = await axios.post(
@@ -40,6 +40,9 @@ class Tracker extends Component {
         latitude: data.latitude,
         longitude: data.longitude
       })
+      flyTo({
+        coordinates: [data.longitude, data.latitude]
+      })
     }
     const error = err => console.log(`Error(${err.code}): ${err.message}`)
     navigator.geolocation.getCurrentPosition(success, error, geolocationOptions)
@@ -49,10 +52,10 @@ class Tracker extends Component {
     const locFound = latitude !== 0 && longitude !== 0
     return (
        locFound &&
-        <div>
-          <button onClick={this.handleHome}>Home</button>
-          <p>You are calling from {latitude}, {longitude}</p>
-         </div>
+        <div id='tracker-container'>
+          <p>Current Location</p>
+          <p>{round(latitude, 5)}, {round(longitude, 5)}</p>
+        </div>
     )
   }
 }

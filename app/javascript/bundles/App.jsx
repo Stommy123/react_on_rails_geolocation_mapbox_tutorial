@@ -1,15 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
+import axios from 'axios';
+import PlaceForm from './components/Place/PlaceForm.jsx';
+import PlaceMap from './components/Place/PlaceMap.jsx';
+import { headers } from './utilities/utils';
 
 const App = _ => {
-  const handleTracker = _ => Turbolinks.visit('/locations')
-  const handleMap = _ => Turbolinks.visit('/places')
-  return (
-    <div>
-      <h1>HELLO WORLD</h1>
-      <button onClick={handleTracker}>Tracker</button>
-      <button onClick={handleMap}>Map</button>
-    </div>
+  const createPlace = async p => await axios.post(
+    '/places',
+    { place: { ...p } },
+    { headers: headers }
   )
+    return (
+      <div id='place-container'>
+        <PlaceMap />
+        <PlaceForm createPlace={this.createPlace} />
+      </div>
+    )
 }
 
 export default App

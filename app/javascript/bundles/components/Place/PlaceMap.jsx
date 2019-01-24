@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
+import PlaceList from './PlaceList.jsx';
+import Tracker from '../Location/Tracker.jsx';
 import { mapboxToken, placeLayer, geolocationOptions, loadPosition } from '../../utilities/utils';
 
 
@@ -86,14 +88,8 @@ class PlaceMap extends Component {
     return (
       <div id='map-container'>
         <div id='map' ref={el => this.mapContainer = el} />
-        <div id='list'>
-            {places.map(place => (
-              <div key={place.id} onClick={ _ => this.flyTo(place)}>
-                <h6>Name: {place.name}</h6>
-                <h6>Address: {place.address}</h6><hr />
-              </div>
-            ))}
-        </div>
+        <PlaceList places={places} flyTo={this.flyTo} />
+        <Tracker flyTo={this.flyTo} />
       </div>
     )
   }

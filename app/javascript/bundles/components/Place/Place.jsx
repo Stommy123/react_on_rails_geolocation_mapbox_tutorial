@@ -1,24 +1,10 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import PlaceForm from './PlaceForm.jsx';
-import PlaceMap from './PlaceMap.jsx';
-import { headers } from '../../utilities/utils';
+import React from 'react';
 
-class Place extends Component {
-  handleHome = _ => Turbolinks.visit('/')
-  createPlace = async p => await axios.post(
-    '/places', { place: { ...p } }, { headers: headers }
-  )
+const Place = ({ place, flyTo }) => (
+  <div key={place.id} onClick={ _ => flyTo(place)}>
+    <h6>{place.name}</h6>
+    <h6>{place.address}</h6><hr />
+  </div>
+)
 
-  render() {
-    return (
-      <div id='place-container'>
-        <button onClick={this.handleHome}>Home</button>
-        <PlaceMap />
-        <PlaceForm createPlace={this.createPlace} />
-      </div>
-    )
-  }
-}
-
-export default Place
+export default Place;

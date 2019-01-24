@@ -11,8 +11,7 @@ import ReactOnRails from 'react-on-rails';
 import 'babel-polyfill';
 import App from '../bundles/App.jsx'
 import Tracker from '../bundles/components/Location/Tracker.jsx'
-import Place from '../bundles/components/Place/Place.jsx'
 
 
 // This is how react_on_rails can see the HelloWorld in the browser.
-ReactOnRails.register({ App, Tracker, Place });
+ReactOnRails.register({ App, Tracker });

@@ -1,8 +1,5 @@
 class LocationsController < ApplicationController
 
-  def index
-  end
-  
   def create
     current_user.update(location_params)
     render json: location_params
