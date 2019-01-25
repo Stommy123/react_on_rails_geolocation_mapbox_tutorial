@@ -109,9 +109,7 @@ class PlaceMap extends Component {
   }
 
   filterPlaces = placeType => e => {
-    console.log(placeType)
     let { visiblePlaces } = this.state
-    console.log(visiblePlaces)
     const map = this.map.setLayoutProperty(
       placeType, 'visibility',
       visiblePlaces.includes(placeType) ? 'none' : 'visible'
