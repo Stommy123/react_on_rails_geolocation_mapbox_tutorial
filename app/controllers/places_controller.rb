@@ -1,9 +1,10 @@
 class PlacesController < ApplicationController
   def index
+    @places = Place.all
     respond_to do |format|
       format.html
       format.json do
-        @places = Place.near([params[:lat], params[:lng]], 50)
+        @places = Place.near([params[:lat], params[:lng]], 50) if params[:lat] && params[:lng]
         render json: {
           type: 'FeatureCollection',
           features: @places.map do |place|
@@ -17,7 +18,7 @@ class PlacesController < ApplicationController
                 id: place.id,
                 name: place.name,
                 address: place.address,
-                bar: place.bar,
+                place_type: !place.bar ? 'restaurant' : 'bar',
                 user: place.user
               }
             }

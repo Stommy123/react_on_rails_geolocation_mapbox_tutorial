@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
 import PlaceList from './PlaceList.jsx';
+import PlaceFilter from './PlaceFilter.jsx';
 import Tracker from '../Location/Tracker.jsx';
 import { mapboxToken, mapStyle, placeLayer, geolocationOptions, loadPosition } from '../../utilities/utils';
 
 
 class PlaceMap extends Component {
-  state = { places: [] }
+  state = { places: this.props.initialPlaces, visiblePlaces: ['restaurant', 'bar'] }
 
   async componentDidMount() {
     const position = await loadPosition();
@@ -20,7 +21,7 @@ class PlaceMap extends Component {
       zoom: 12,
       center: geoLoc
     }
-    await this.createMap(mapOptions, geolocationOptions)
+    this.createMap(mapOptions, geolocationOptions)
   }
 
   createMap = (mapOptions, geolocationOptions) => {
@@ -36,26 +37,50 @@ class PlaceMap extends Component {
     )
     map.on('load',  _ => {
       const { lat, lng } = map.getCenter();
+      const { initialPlaces } = this.props
+      const icons = {
+        restaurant: 'restaurant-15',
+        bar: 'bar-15',
+      }
       map.addSource( 'places', { type: 'geojson', data: `/places.json?lat=${lat}&lng=${lng}` })
-      map.addLayer(placeLayer)
-      map.on('click', 'places', e => {
-        const { properties, geometry } = e.features[0]
-        const coordinates = geometry.coordinates.slice()
-        const { name, id, address } = properties
-        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
+      initialPlaces.forEach(place => {
+        const placeType = place.properties.place_type
+        if (!map.getLayer(placeType)) {
+          map.addLayer({
+            id: placeType,
+            type: 'symbol',
+            source: 'places',
+            layout: {
+              'icon-image': icons[placeType],
+              'icon-allow-overlap': true
+            },
+            filter: ['==', 'place_type', placeType]
+          })
+          map.on('click', placeType, e => {
+            const { properties, geometry } = e.features[0]
+            const coordinates = geometry.coordinates.slice()
+            const { name, id, address } = properties
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+              coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
+            }
+            new mapboxgl.Popup()
+              .setLngLat(coordinates)
+              .setHTML(`
+                <div id='popup'>
+                  <a href='/places/${id}'>${name}</a>
+                  <p>${address}</p>
+                </div>
+                `)
+              .addTo(map)
+          })
+          map.on('mouseenter', placeType, _ => {
+            map.getCanvas().style.cursor = 'pointer'
+          })
+          map.on('mouseleave', placeType, _ => {
+            map.getCanvas().style.cursor = String()
+          })
         }
-        new mapboxgl.Popup()
-          .setLngLat(coordinates)
-          .setHTML(`
-            <div id='popup'>
-              <a href='/places/${id}'>${name}</a>
-              <p>${address}</p>
-            </div>
-            `)
-          .addTo(map)
       })
-      this.fetchPlaces()
       map.on('moveend', _ => this.fetchPlaces())
     })
   }
@@ -83,15 +108,33 @@ class PlaceMap extends Component {
       })
   }
 
+  filterPlaces = placeType => e => {
+    console.log(placeType)
+    let { visiblePlaces } = this.state
+    console.log(visiblePlaces)
+    const map = this.map.setLayoutProperty(
+      placeType, 'visibility',
+      visiblePlaces.includes(placeType) ? 'none' : 'visible'
+    )
+    const filteredPlaces = visiblePlaces.filter(type => type !== placeType)
+    if (visiblePlaces.includes(placeType)) visiblePlaces = filteredPlaces
+    else visiblePlaces.push(placeType)
+    this.setState({ visiblePlaces })
+  }
+
   componentWillUnmount() { this.map.remove() }
 
   render() {
-    const { places } = this.state
+    const { places, visiblePlaces } = this.state
+    const placeTypes = ['restaurant', 'bar']
     return (
-      <div id='map-container'>
-        <div id='map' ref={el => this.mapContainer = el} />
-        <PlaceList places={places} flyTo={this.flyTo} />
-        <Tracker flyTo={this.flyTo} />
+      <div id='placeMap-container'>
+        <div id='map-container'>
+          <div id='map' ref={el => this.mapContainer = el} />
+          <PlaceList places={places} flyTo={this.flyTo} />
+          <Tracker flyTo={this.flyTo} />
+        </div>
+        { placeTypes.map(place => <PlaceFilter key={place} place={place} visiblePlaces={visiblePlaces} filterPlaces={this.filterPlaces} />)}
       </div>
     )
   }

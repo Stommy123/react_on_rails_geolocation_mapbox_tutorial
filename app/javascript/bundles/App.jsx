@@ -5,8 +5,12 @@ import PlaceMap from './components/Place/PlaceMap.jsx';
 import { headers } from './utilities/utils';
 
 class App extends Component {
+  state = { initialPlaces: [] }
+  async componentDidMount() {
+    const { data: { features: initialPlaces } } = await axios.get('/places.json')
+    this.setState({ initialPlaces })
+  }
   createPlace = async p => {
-    console.log(p)
     await axios.post(
       '/places',
       { place: { ...p } },
@@ -14,10 +18,11 @@ class App extends Component {
     )
   }
   render() {
+    const { initialPlaces } = this.state
     return (
       <div id='place-container'>
-        <PlaceMap />
         <PlaceForm createPlace={this.createPlace} />
+        <PlaceMap initialPlaces={initialPlaces} />
       </div>
     )
   }
