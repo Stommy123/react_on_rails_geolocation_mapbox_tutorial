@@ -9,7 +9,7 @@ class Tracker extends Component {
 
   componentDidMount() {
     this.trackLocation()
-    this.interval = setInterval(this.trackLocation, 30000)
+    this.interval = setInterval(this.trackLocation, 60000)
     window.addEventListener('beforeunload', this.handleLeavePage)
   }
 

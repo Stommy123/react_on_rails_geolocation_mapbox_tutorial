@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import PlaceForm from './components/Place/PlaceForm.jsx';
 import PlaceMap from './components/Place/PlaceMap.jsx';
-import { headers } from './utilities/utils';
+import { headers, headersWithImage } from './utilities/utils';
 
 class App extends Component {
   state = { initialPlaces: [] }
@@ -11,11 +11,10 @@ class App extends Component {
     this.setState({ initialPlaces })
   }
   createPlace = async p => {
-    await axios.post(
-      '/places',
-      { place: { ...p } },
-      { headers: headers }
-    )
+    const formData = new FormData()
+    const keys = Object.keys(p)
+    keys.forEach(key => formData.append(`place[${key}]`, p[key]))
+    await axios.post('/places', formData, { headers: headersWithImage })
   }
   render() {
     const { initialPlaces } = this.state

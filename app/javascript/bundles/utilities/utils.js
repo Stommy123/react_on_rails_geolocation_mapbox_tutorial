@@ -7,6 +7,12 @@ export const headers = {
   'X-CSRF-TOKEN': token
 }
 
+export const headersWithImage = {
+  'X-Requested-With': 'XMLHttpRequest',
+  'X-CSRF-TOKEN': token,
+  'content-type': 'multipart/form-data'
+}
+
 export const mapboxToken = 'pk.eyJ1IjoiYW5keXdlaXNzMTk4MiIsImEiOiJIeHpkYVBrIn0.3N03oecxx5TaQz7YLg2HqA'
 
 export const mapStyle = 'mapbox://styles/mapbox/streets-v9'

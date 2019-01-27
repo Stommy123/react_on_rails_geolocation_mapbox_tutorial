@@ -4,11 +4,12 @@ class PlacesController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
+        p url_for(Place.last.image)
         @places = Place.near([params[:lat], params[:lng]], 50) if params[:lat] && params[:lng]
         render json: {
           type: 'FeatureCollection',
           features: @places.map do |place|
-            {
+          {
               type: 'Feature',
               geometry: {
                 type: 'Point',
@@ -19,6 +20,7 @@ class PlacesController < ApplicationController
                 name: place.name,
                 address: place.address,
                 place_type: !place.bar ? 'restaurant' : 'bar',
+                image: place.image.attached? && url_for(place.image),
                 user: place.user
               }
             }
@@ -34,6 +36,11 @@ class PlacesController < ApplicationController
   end
 
   def create
+    p 'hello world'
+    p 'hello world'
+    p 'hello world'
+    p 'hello world'
+    p 'hello world'
     @place = Place.new(place_params)
     @place.user = current_user
     @place.save
@@ -43,6 +50,6 @@ class PlacesController < ApplicationController
   private
 
   def place_params
-    params.require(:place).permit(:name, :street, :city, :state, :country, :latitude, :longitude)
+    params.require(:place).permit(:name, :street, :city, :state, :country, :image)
   end
 end

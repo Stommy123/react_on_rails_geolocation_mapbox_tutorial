@@ -1,2 +1,5 @@
+<% if @place.image.attached? %>
+  <%= image_tag @place.image, class: 'show-image' %>
+<% end %>
 <h1>This is the show page for <%= @place.name %> </h1>
 <p> created by <%= @user.email %> </p>

@@ -58,8 +58,9 @@ class PlaceMap extends Component {
           })
           map.on('click', placeType, e => {
             const { properties, geometry } = e.features[0]
+            console.log(properties.image)
             const coordinates = geometry.coordinates.slice()
-            const { name, id, address } = properties
+            const { name, id, address, image } = properties
             while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
               coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
             }
@@ -69,6 +70,7 @@ class PlaceMap extends Component {
                 <div id='popup'>
                   <a href='/places/${id}'>${name}</a>
                   <p>${address}</p>
+                  <img id='image' src=${image} />
                 </div>
                 `)
               .addTo(map)
