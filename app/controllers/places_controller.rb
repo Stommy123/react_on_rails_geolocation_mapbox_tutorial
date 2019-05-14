@@ -4,7 +4,6 @@ class PlacesController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        p url_for(Place.last.image)
         @places = Place.near([params[:lat], params[:lng]], 50) if params[:lat] && params[:lng]
         render json: {
           type: 'FeatureCollection',
@@ -36,11 +35,6 @@ class PlacesController < ApplicationController
   end
 
   def create
-    p 'hello world'
-    p 'hello world'
-    p 'hello world'
-    p 'hello world'
-    p 'hello world'
     @place = Place.new(place_params)
     @place.user = current_user
     @place.save
